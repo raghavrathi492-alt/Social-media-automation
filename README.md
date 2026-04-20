@@ -1,2 +1,6 @@
-# Social-media-automation
-This is a type of automation in which people can prompt and paste their progress into their social media handle 
+\# AI Social Media App
+
+
+
+This is a Streamlit app for AI-based social media post generation and analytics.
+
