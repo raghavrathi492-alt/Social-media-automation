@@ -177,54 +177,24 @@ elif page == "History":
     else:
         history_df = pd.DataFrame(st.session_state.history)
         st.dataframe(history_df)
+import streamlit as st
+from openai import OpenAI
 
+# Initialize OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-st.header("📸 Instagram Caption Generator")
+st.title("AI Chat App 🤖")
 
-topic = st.text_input("What is the post about?", placeholder="Example: launching my handmade candle brand")
-tone = st.selectbox(
-    "Choose a tone",
-    ["Casual", "Professional", "Funny", "Luxury", "Inspirational", "Trendy"]
-)
-audience = st.text_input("Target audience", placeholder="Example: young entrepreneurs")
-include_hashtags = st.checkbox("Include hashtags", value=True)
-emoji_level = st.selectbox("Emoji style", ["None", "Low", "Medium", "High"], index=2)
-caption_length = st.selectbox("Caption length", ["Short", "Medium", "Long"], index=1)
-call_to_action = st.text_input("Call to action (optional)", placeholder="Example: Follow for more tips")
+user_input = st.text_input("Type your question:")
 
-if st.button("Generate captions"):
-    if not topic.strip():
-        st.warning("Please enter what the post is about.")
-    else:
-        prompt = f"""
-You are an expert Instagram copywriter.
-
-Write 3 different Instagram captions for this post.
-
-Post topic: {topic}
-Tone: {tone}
-Target audience: {audience if audience.strip() else "general audience"}
-Include hashtags: {"Yes" if include_hashtags else "No"}
-Emoji style: {emoji_level}
-Caption length: {caption_length}
-Call to action: {call_to_action if call_to_action.strip() else "None"}
-
-Requirements:
-- Make the captions engaging and natural.
-- Keep each caption distinct from the others.
-- Format the output clearly as:
-Caption 1:
-...
-Caption 2:
-...
-Caption 3:
-...
-"""
-
+if st.button("Generate") and user_input:
+    with st.spinner("Thinking..."):
         response = client.responses.create(
             model="gpt-5.4",
-            input=prompt
+            input=user_input
         )
+        
+        st.success("Response:")
+        st.write(response.output_text)
 
         st.write(response.output_text)
