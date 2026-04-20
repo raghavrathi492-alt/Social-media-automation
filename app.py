@@ -178,16 +178,9 @@ elif page == "History":
         history_df = pd.DataFrame(st.session_state.history)
         st.dataframe(history_df)
 
-import streamlit as st
-from openai import OpenAI
-
-st.set_page_config(page_title="Instagram Caption Generator", page_icon="📸")
-
-# Read OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-st.title("📸 Instagram Caption Generator")
-st.write("Generate Instagram captions using OpenAI.")
+st.header("📸 Instagram Caption Generator")
 
 topic = st.text_input("What is the post about?", placeholder="Example: launching my handmade candle brand")
 tone = st.selectbox(
@@ -229,15 +222,9 @@ Caption 3:
 ...
 """
 
-        with st.spinner("Generating captions..."):
-            try:
-                response = client.responses.create(
-                    model="gpt-5.4",
-                    input=prompt
-                )
+        response = client.responses.create(
+            model="gpt-5.4",
+            input=prompt
+        )
 
-                st.subheader("Generated Captions")
-                st.write(response.output_text)
-
-            except Exception as e:
-                st.error(f"Error: {e}")
+        st.write(response.output_text)
