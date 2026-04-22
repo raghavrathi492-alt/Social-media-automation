@@ -180,21 +180,26 @@ elif page == "History":
 import streamlit as st
 from openai import OpenAI
 
-# Initialize OpenAI client
+st.set_page_config(page_title="AI Chat App", page_icon="🤖")
+
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.title("AI Chat App 🤖")
-
 user_input = st.text_input("Type your question:")
 
-if st.button("Generate") and user_input:
-    with st.spinner("Thinking..."):
-        response = client.responses.create(
-            model="gpt-5.4",
-            input=user_input
-        )
-        
-        st.success("Response:")
-        st.write(response.output_text)
+if st.button("Generate"):
+    if not user_input.strip():
+        st.warning("Please enter a question.")
+    else:
+        with st.spinner("Thinking..."):
+            try:
+                response = client.responses.create(
+                    model="gpt-4.1-mini",
+                    input=user_input
+                )
+                st.write(response.output_text)
+            except Exception as e:
+                st.error(f"OpenAI request failed: {e}")
+                st.info("Check your OpenAI billing, usage limits, and API key.")
 
-        st.write(response.output_text)
+       
