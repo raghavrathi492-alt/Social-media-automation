@@ -456,6 +456,289 @@ elif st.session_state.page == "Account":
             st.success("Settings saved successfully.")
 
 # ---------- FOOTER ----------
+
+import streamlit as st
+from datetime import datetime
+
+st.set_page_config(
+    page_title="Social Media Automation",
+    page_icon="📊",
+    layout="wide"
+)
+
+# ---------- SESSION STATE ----------
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+if "billing_history" not in st.session_state:
+    st.session_state.billing_history = [
+        {"date": "2026-04-01", "plan": "Starter", "amount": "$9", "status": "Paid"},
+        {"date": "2026-03-01", "plan": "Starter", "amount": "$9", "status": "Paid"},
+        {"date": "2026-02-01", "plan": "Starter", "amount": "$9", "status": "Paid"},
+    ]
+
+# ---------- STYLING ----------
+st.markdown("""
+<style>
+.block-container {
+    padding-top: 1.2rem;
+    padding-bottom: 2rem;
+}
+
+.main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+}
+
+.sub-title {
+    font-size: 1.05rem;
+    color: #9aa0a6;
+    margin-bottom: 1.4rem;
+}
+
+.metric-card {
+    padding: 1rem;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.feature-card {
+    padding: 1.3rem;
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    margin-bottom: 1rem;
+}
+
+.upload-card {
+    padding: 1.4rem;
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(80,70,229,0.18), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pricing-card {
+    padding: 1.4rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    min-height: 360px;
+}
+
+.highlight-card {
+    padding: 1.4rem;
+    border-radius: 20px;
+    border: 1px solid #4f46e5;
+    background: rgba(79, 70, 229, 0.14);
+    min-height: 360px;
+}
+
+.small-muted {
+    color: #9aa0a6;
+    font-size: 0.95rem;
+}
+
+.upload-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.preview-box {
+    padding: 0.8rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-top: 1rem;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ---------- TOP NAVIGATION ----------
+nav1, nav2, nav3, nav4, nav5 = st.columns([2, 1, 1, 1, 1])
+
+with nav1:
+    st.markdown('<div class="main-title">Social Media Automation 🚀</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">Create content, upload images, manage plans, and track billing in one dashboard.</div>', unsafe_allow_html=True)
+
+with nav2:
+    if st.button("🏠 Home", use_container_width=True):
+        st.session_state.page = "Home"
+
+with nav3:
+    if st.button("💳 Pricing", use_container_width=True):
+        st.session_state.page = "Pricing"
+
+with nav4:
+    if st.button("🧾 Billing History", use_container_width=True):
+        st.session_state.page = "Billing History"
+
+with nav5:
+    if st.button("⚙️ Account", use_container_width=True):
+        st.session_state.page = "Account"
+
+st.divider()
+
+# ---------- HOME PAGE ----------
+if st.session_state.page == "Home":
+    left, right = st.columns([1.35, 1])
+
+    with left:
+        st.markdown("## Welcome back")
+        st.write("Build beautiful social media posts with text, image upload, and smart workflow tools.")
+
+        m1, m2, m3 = st.columns(3)
+        with m1:
+            st.markdown('<div class="metric-card"><h3>124</h3><p>Posts Created</p></div>', unsafe_allow_html=True)
+        with m2:
+            st.markdown('<div class="metric-card"><h3>18</h3><p>Scheduled</p></div>', unsafe_allow_html=True)
+        with m3:
+            st.markdown('<div class="metric-card"><h3>3</h3><p>Active Plans</p></div>', unsafe_allow_html=True)
+
+        st.markdown("### Quick Actions")
+        q1, q2, q3 = st.columns(3)
+
+        with q1:
+            show_generator = st.button("✍️ Generate Post", use_container_width=True)
+
+        with q2:
+            if st.button("📅 Schedule Content", use_container_width=True):
+                st.success("Scheduling section can be added here.")
+
+        with q3:
+            if st.button("📈 View Analytics", use_container_width=True):
+                st.success("Analytics section can be added here.")
+
+        if show_generator:
+            st.markdown("""
+            <div class="upload-card">
+                <div class="upload-label">✨ Create a Post</div>
+                <div class="small-muted">Upload an image from your laptop and add post details in a clean creator panel.</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            post_title = st.text_input("Post title", placeholder="Example: My Google certificate achievement")
+            post_caption = st.text_area("Post caption / idea", placeholder="Write your caption idea here...")
+            uploaded_file = st.file_uploader(
+                "Upload an image",
+                type=["png", "jpg", "jpeg", "webp"]
+            )
+
+            if uploaded_file is not None:
+                st.markdown('<div class="preview-box">', unsafe_allow_html=True)
+                st.image(uploaded_file, caption="Uploaded image preview", use_container_width=True)
+                st.success("Image uploaded successfully.")
+                st.markdown('</div>', unsafe_allow_html=True)
+
+            cta1, cta2 = st.columns(2)
+            with cta1:
+                if st.button("🚀 Save Draft", use_container_width=True):
+                    st.success("Draft saved successfully.")
+            with cta2:
+                if st.button("🎉 Publish Preview", use_container_width=True):
+                    st.success("Post preview generated.")
+
+    with right:
+        st.markdown("""
+        <div class="feature-card">
+            <h3>Creator Panel</h3>
+            <p class="small-muted">Everything is designed to feel cleaner and more premium.</p>
+            <ul>
+                <li>Upload image from laptop</li>
+                <li>Instant image preview</li>
+                <li>Modern creator card layout</li>
+                <li>Draft and preview actions</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.info("Click Generate Post to open the fancy image upload and post creation area.")
+
+# ---------- PRICING PAGE ----------
+elif st.session_state.page == "Pricing":
+    st.markdown("## 💳 Pricing Plans")
+    st.write("Choose the plan that fits your content workflow.")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        <div class="pricing-card">
+            <h3>Starter</h3>
+            <h1>$9<span style="font-size:18px;">/month</span></h1>
+            <p class="small-muted">Best for beginners</p>
+            <hr>
+            <p>✅ 20 AI content generations</p>
+            <p>✅ Basic analytics</p>
+            <p>✅ Single user</p>
+            <p>✅ Email support</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Choose Starter", key="starter", use_container_width=True)
+
+    with col2:
+        st.markdown("""
+        <div class="highlight-card">
+            <h3>Pro</h3>
+            <h1>$29<span style="font-size:18px;">/month</span></h1>
+            <p class="small-muted">Most popular plan</p>
+            <hr>
+            <p>✅ 200 AI content generations</p>
+            <p>✅ Advanced analytics</p>
+            <p>✅ Multi-platform support</p>
+            <p>✅ Priority support</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Choose Pro", key="pro", use_container_width=True)
+
+    with col3:
+        st.markdown("""
+        <div class="pricing-card">
+            <h3>Business</h3>
+            <h1>$79<span style="font-size:18px;">/month</span></h1>
+            <p class="small-muted">For teams and agencies</p>
+            <hr>
+            <p>✅ Unlimited AI generations</p>
+            <p>✅ Team access</p>
+            <p>✅ Premium analytics</p>
+            <p>✅ Dedicated support</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Choose Business", key="business", use_container_width=True)
+
+# ---------- BILLING HISTORY PAGE ----------
+elif st.session_state.page == "Billing History":
+    st.markdown("## 🧾 Billing History")
+    st.write("View your previous payments and subscription records.")
+    st.dataframe(st.session_state.billing_history, use_container_width=True, hide_index=True)
+
+    s1, s2, s3 = st.columns(3)
+    with s1:
+        st.metric("Current Plan", "Starter")
+    with s2:
+        st.metric("Next Billing Date", "2026-05-01")
+    with s3:
+        st.metric("Last Payment", "$9")
+
+# ---------- ACCOUNT PAGE ----------
+elif st.session_state.page == "Account":
+    st.markdown("## ⚙️ Account Settings")
+    st.text_input("Full Name", "Your Name")
+    st.text_input("Email", "you@example.com")
+    st.selectbox("Current Plan", ["Starter", "Pro", "Business"])
+    if st.button("Save Settings"):
+        st.success("Settings saved successfully.")
+
+st.divider()
+st.caption(f"Last updated: {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 st.divider()
 st.caption(f"Last updated: {datetime.now().strftime('%d %b %Y, %I:%M %p')}")
 
